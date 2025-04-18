@@ -1,13 +1,24 @@
-#views.py file for viewing api
+#main.py file for final api
+
 
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
+import fitz  # PyMuPDF
 import shutil
 import os
-from service.utils import read_pdf,summarization
 
 app = FastAPI()
 
+def read_pdf(file_path):
+    """Extract text from a PDF using PyMuPDF."""
+    text = ""
+    try:
+        with fitz.open(file_path) as doc:
+            for page in doc:
+                text += page.get_text()
+        return text
+    except Exception as e:
+        return f"Error reading PDF: {e}"
 
 @app.post("/extract-pdf-text/")
 async def extract_pdf_text(file: UploadFile = File(...)):
@@ -25,8 +36,5 @@ async def extract_pdf_text(file: UploadFile = File(...)):
     # Delete temporary file
     os.remove(temp_path)
 
-    summary = summarization(text)
+    return {"filename": file.filename, "extracted_text": text}
 
-    return {"filename": file.filename, 
-            "summary": summary
-            }

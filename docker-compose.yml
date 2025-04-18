@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  pdf-text-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pdf-text-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app  # Optional: mount code for live changes during development
+    restart: unless-stopped
