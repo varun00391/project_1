@@ -4,7 +4,7 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 import shutil
 import os
-from service.utils import read_pdf,summarization
+from api.service.utils import read_pdf,summarization
 
 app = FastAPI()
 

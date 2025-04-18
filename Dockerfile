@@ -11,12 +11,13 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the entire service folder into /app
-COPY service/ .
+# COPY app/service/ .
+COPY api/service/ ./api/service/
 
 # Expose FastAPI default port
 EXPOSE 8000
 
 # Start FastAPI app
 # CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-CMD ["uvicorn", "service.views:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "api.service.views:app", "--host", "0.0.0.0", "--port", "8000"]
 
