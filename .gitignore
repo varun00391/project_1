@@ -1,8 +1,0 @@
-# Python cache
-__pycache__/
-
-# Environment files
-.env
-
-# macOS system file
-.DS_Store
