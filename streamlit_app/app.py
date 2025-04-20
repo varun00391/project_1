@@ -6,7 +6,7 @@ st.set_page_config(page_title="PDF Summarizer", layout="centered")
 st.title("📄 PDF Summarizer using LLM")
 st.write("Upload a PDF file and get a smart summary generated using Groq's LLM.")
 
-uploaded_file = st.file_uploader("Upload your PDF", type=["pdf"])
+uploaded_file = st.sidebar.file_uploader("Upload your PDF", type=["pdf"])
 
 if uploaded_file is not None:
     with st.spinner("Uploading and summarizing..."):
