@@ -12,13 +12,14 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                sh 'cmd'
+                sh 'ls'
             }
         }
 
         stage('Deploy') {
             steps {
                 echo 'Deploying the application...'
+                sh 'pwd'
             }
         }
     }
