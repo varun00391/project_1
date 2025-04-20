@@ -6,11 +6,20 @@ pipeline {
     }
 
     stages {
+
+        stage ('Check docker') {
+            steps {
+                sh 'which docker'
+                sh 'docker --version'
+            }   
+        }
         stage('Checkout Code') {
             steps {
                 checkout scm
             }
         }
+
+        
 
         stage('Stop Previous Containers') {
             steps {
