@@ -2,18 +2,12 @@ pipeline {
     agent any
 
     environment {
-        PATH = PATH   = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" //"/usr/local/bin:$PATH"
-        DOCKER = 'usr/local/bin/docker'  // /usr/local/bin/docker
+        // Prepend /usr/local/bin so Jenkins can find docker
+        PATH   = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+        DOCKER = "/usr/local/bin/docker"
     }
 
     stages {
-
-        stage {
-            steps {
-                sh 'echo "PATH=[$PATH]"'
-                sh 'which docker || echo "docker not found"'
-            }
-        }
         stage('Checkout Code') {
             steps {
                 checkout scm
