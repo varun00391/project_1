@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER = '/usr/local/bin/docker'
+        DOCKER = 'usr/local/bin/docker'  // /usr/local/bin/docker
     }
 
     stages {
