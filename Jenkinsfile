@@ -12,6 +12,7 @@ pipeline {
             steps {
                 sh 'echo "PATH=[$PATH]"'
                 sh 'which docker || echo "docker not found"'
+            }
         }
         stage('Checkout Code') {
             steps {
