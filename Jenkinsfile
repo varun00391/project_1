@@ -45,9 +45,7 @@ pipeline {
         stage('Build & Start Services') {
             steps {
                 echo '🚀 Building and starting containers...'
-                sh """
-                echo "$DOCKER_COMPOSE_ENV" | ${DOCKER} compose --env-file - up -d --build
-                """
+                sh """${DOCKER} compose --env-file <(echo "$DOCKER_COMPOSE_ENV") up -d --build"""
             }
         }
 
