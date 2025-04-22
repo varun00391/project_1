@@ -11,8 +11,8 @@ services:
     volumes:
       - .:/app  # Optional: mount code for live changes during development
     restart: unless-stopped
-    env_file:
-      - .env
+    # env_file:
+    #   - .env
 
   streamlit-app:
     build:
