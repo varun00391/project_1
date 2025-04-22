@@ -39,7 +39,7 @@ pipeline {
     post {
         always {
             echo 'Cleaning up...'
-            sh 'docker-compose down --remove-orphans'
+            sh '/usr/local/bin/docker-compose down --remove-orphans'
             sh 'rm -f .env'
         }
     }
