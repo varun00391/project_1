@@ -18,10 +18,9 @@ pipeline {
 
         stage('Build and Run') {
             steps {
-                sh '''
-                    docker-compose down --remove-orphans
-                    docker-compose up --build -d
-                '''
+                sh '/usr/local/bin/docker-compose down --remove-orphans'
+                sh '/usr/local/bin/docker-compose up -d --build '
+            
             }
         }
 
