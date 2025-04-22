@@ -21,14 +21,25 @@ pipeline {
         }
 
         
+        // stage('Build and Run') {
+        //     steps {
+        //         // Set DOCKER_CLI_EXPERIMENTAL only for this step
+        //         sh 'export DOCKER_CLI_EXPERIMENTAL=enabled && /usr/local/bin/docker-compose down --remove-orphans'
+        //         sh 'export DOCKER_CLI_EXPERIMENTAL=enabled && /usr/local/bin/docker-compose up -d --build'
+
+        //     }
+        // }
+
         stage('Build and Run') {
             steps {
-                // Set DOCKER_CLI_EXPERIMENTAL only for this step
+                echo 'Stopping existing containers...'
                 sh 'export DOCKER_CLI_EXPERIMENTAL=enabled && /usr/local/bin/docker-compose down --remove-orphans'
-                sh 'export DOCKER_CLI_EXPERIMENTAL=enabled && /usr/local/bin/docker-compose up -d --build'
 
+                echo 'Building and starting containers...'
+                sh 'export DOCKER_CLI_EXPERIMENTAL=enabled && /usr/local/bin/docker-compose up -d --build || docker-compose logs'
             }
         }
+
 
         stage('Health Check') {
             steps {
