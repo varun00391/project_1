@@ -24,8 +24,9 @@ pipeline {
         stage('Build and Run') {
             steps {
                 // Set DOCKER_CLI_EXPERIMENTAL only for this step
-                sh 'export DOCKER_CLI_EXPERIMENTAL=enabled && docker-compose down --remove-orphans'
-                sh 'export DOCKER_CLI_EXPERIMENTAL=enabled && docker-compose up -d --build'
+                sh 'export DOCKER_CLI_EXPERIMENTAL=enabled && /usr/local/bin/docker-compose down --remove-orphans'
+                sh 'export DOCKER_CLI_EXPERIMENTAL=enabled && /usr/local/bin/docker-compose up -d --build'
+
             }
         }
 
