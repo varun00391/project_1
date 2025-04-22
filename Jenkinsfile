@@ -67,8 +67,7 @@ pipeline {
                 script {
                     retry(5) {
                         sleep(time: 3, unit: 'SECONDS') // wait a bit before trying
-                        sh 'curl -f http://summarization-api:8000/docs'
-
+                        sh 'curl -f http://localhost:8000/docs'
                     }
                 }
             }
