@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_CLI_EXPERIMENTAL = 'enabled'  // Set the environment variable here
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
