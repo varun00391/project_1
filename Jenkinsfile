@@ -20,11 +20,15 @@ pipeline {
                         echo "⚙️ Loading environment variables from Jenkins credential..."
                         def envVars = [:]
                         DOTENV_VARS.readLines().each { line ->
-                            if (line =~ /^(export )?([A-Za-z0-9_]+)=(.*)$/) {
-                                envVars["${it[2]}"] = it[3].trim()
-                                env."${it[2]}" = it[3].trim() // Also set them as Jenkins env vars for later stages
+                            def matcher = line =~ /^(?:export\s+)?([A-Za-z0-9_]+)=(.*)$/
+                            if (matcher.matches()) {
+                                def key = matcher[0][1]
+                                def value = matcher[0][2].trim()
+                                envVars[key] = value
+                                env[key] = value
                             }
                         }
+
                         // Optionally, echo some of the loaded variables for debugging
                         echo "DATABASE_URL: ${env.DATABASE_URL ?: 'Not set'}"
                         echo "API_KEY: ${env.API_KEY ?: 'Not set'}"
