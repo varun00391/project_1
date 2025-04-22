@@ -3,7 +3,7 @@ import requests
 
 st.set_page_config(page_title="PDF Summarizer", layout="centered")
 
-st.title("📄 PDF Summarizer using LLM")
+st.title("Summarization Tool")
 st.write("Upload a PDF file and get a smart summary generated using Groq's LLM.")
 
 uploaded_file = st.sidebar.file_uploader("Upload your PDF", type=["pdf"])
