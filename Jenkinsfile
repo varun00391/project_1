@@ -14,6 +14,25 @@ pipeline {
             }
         }
 
+                stage('Load Environment Variables') {
+            steps {
+                withCredentials([string(credentialsId: 'DOTENV_FILE_CONTENT', variable: 'DOTENV_VARS')]) {
+                    script {
+                        echo "⚙️ Loading environment variables from Jenkins credential..."
+                        DOTENV_VARS.readLines().each { line ->
+                            if (line =~ /^(export )?([A-Za-z0-9_]+)=(.*)$/) {
+                                env."${it[2]}" = it[3].trim()
+                            }
+                        }
+                        // Optionally, echo some of the loaded variables for debugging
+                        echo "DATABASE_URL: ${env.DATABASE_URL ?: 'Not set'}"
+                        echo "API_KEY: ${env.API_KEY ?: 'Not set'}"
+                    }
+                }
+            }
+        }
+
+
         stage('Stop Previous Containers') {
             steps {
                 echo '🛑 Stopping running containers...'
