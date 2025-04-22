@@ -54,10 +54,8 @@ pipeline {
     }
 
     post {
-        always {
-            echo 'Cleaning up...'
-            sh '/usr/local/bin/docker-compose down --remove-orphans'
-            sh 'rm -f .env'
-        }
+    always {
+        echo 'Build completed — not cleaning up so containers stay up.'
     }
 }
+
