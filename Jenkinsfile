@@ -64,9 +64,15 @@ pipeline {
         stage('Verify FastAPI') {
             steps {
                 echo '🔍 Verifying FastAPI is up...'
-                sh 'curl -s http://localhost:8000/docs'
+                script {
+                    retry(5) {
+                        sleep(time: 3, unit: 'SECONDS') // wait a bit before trying
+                        sh 'curl -f http://localhost:8000/docs'
+                    }
+                }
             }
         }
+
 
         stage('Verify Streamlit') {
             steps {
