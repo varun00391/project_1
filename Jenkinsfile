@@ -45,7 +45,15 @@ pipeline {
         stage('Build & Start Services') {
             steps {
                 echo '🚀 Building and starting containers...'
-                sh """${DOCKER} compose --env-file <(echo "$DOCKER_COMPOSE_ENV") up -d --build"""
+                script {
+                    def tempEnvFile = sh(script: 'mktemp', returnStdout: true).trim()
+                    writeFile file: tempEnvFile, text: env.DOCKER_COMPOSE_ENV
+
+                    sh "${DOCKER} compose --env-file ${tempEnvFile} up -d --build"
+
+                    // Clean up the temporary file
+                    sh "rm -f ${tempEnvFile}"
+                }
             }
         }
 
