@@ -1,18 +1,17 @@
 version: '3.8'
-
 services:
-  summarization-api:
+  backend-api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: summarization-api
+    container_name: backend-api
     ports:
       - "8000:8000"
     volumes:
-      - .:/app  # Optional: mount code for live changes during development
+      - .:/app
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
     restart: unless-stopped
-    # env_file:
-    #   - .env
 
   streamlit-app:
     build:
@@ -22,5 +21,5 @@ services:
     ports:
       - "8501:8501"
     depends_on:
-      - summarization-api
+      - backend-api
     restart: unless-stopped
