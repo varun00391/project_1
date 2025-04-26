@@ -1,9 +1,0 @@
-pymupdf
-fastapi
-uvicorn
-python-multipart
-groq
-python-dotenv
-streamlit
-requests
-fitz

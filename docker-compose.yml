@@ -1,25 +1,14 @@
-version: '3.8'
+version: "3.9"
+
 services:
-  backend-api:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: backend-api
     ports:
       - "8000:8000"
     volumes:
       - .:/app
-    environment:
-      - GROQ_API_KEY=${GROQ_API_KEY}
-    restart: unless-stopped
-
-  streamlit-app:
-    build:
-      context: ./streamlit_app
-      dockerfile: Dockerfile
-    container_name: streamlit-frontend
-    ports:
-      - "8501:8501"
-    depends_on:
-      - backend-api
+    env_file:
+      - .env
     restart: unless-stopped

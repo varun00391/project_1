@@ -1,8 +1,10 @@
+import uvicorn
 from fastapi import FastAPI
-from api.rag_chatbot.utils import router as rag_router
-from api.summarization.utils import router as summarize_router
+from fastapi.middleware.cors import CORSMiddleware
 
-# app = FastAPI()
+from api.rag_chatbot.views import router as rag_router
+from api.summarization.views import router as summarizer_router
+
 
 app = FastAPI(
     title="Multimodal Summarizer & RAG API",
@@ -10,6 +12,20 @@ app = FastAPI(
     version="2.0.0"
 )
 
+# Add the list of routes we want to allow
+origins = ["*"]
+
+app.add_middleware(
+    middleware_class=CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(rag_router, prefix="/rag-chatbot", tags=["RAG Chatbot"])
-app.include_router(summarize_router, prefix="/summarize", tags=["Summarization"])
+app.include_router(summarizer_router, prefix="/summarization", tags=["Summarization"])
+
+
+if (__name__ == "__main__"):
+    uvicorn.run("main:app", reload=True, port=8000)
