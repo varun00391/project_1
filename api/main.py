@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.rag_chatbot.views import router as rag_router
 from api.summarization.views import router as summarizer_router
+from api.transcription.views import router as transcription_router
 
 
 app = FastAPI(
@@ -24,7 +25,9 @@ app.add_middleware(
 )
 
 app.include_router(rag_router, prefix="/rag-chatbot", tags=["RAG Chatbot"])
-app.include_router(summarizer_router, prefix="/summarization and Transcription", tags=["Summarization"])
+# app.include_router(summarizer_router, prefix="/summarization and Transcription", tags=["Summarization"])
+app.include_router(summarizer_router, prefix="/summarization", tags=["Summarization & Transcription"])
+app.include_router(transcription_router,prefix="/Transcription",tags=["Transcription"])
 
 
 if (__name__ == "__main__"):

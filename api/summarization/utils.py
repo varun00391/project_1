@@ -60,32 +60,6 @@ class SummarizationPipeline:
             tmp_dir.cleanup()
             print(f"[6] Temp folder {tmp_dir.name} deleted.")
 
-    # def download_audio_with_ytdlp(self, url, output_filename="yt_audio.mp3"):
-    #     command = [
-    #         "yt-dlp",
-    #         "-f", "bestaudio",
-    #         "--extract-audio",
-    #         "--audio-format", "mp3",
-    #         "--output", output_filename,
-    #         url
-    #     ]
-    #     subprocess.run(command, check=True)
-    #     return output_filename
-    
-    # def transcribe_youtube_video(self, url):
-    #     print("[1] Downloading audio with yt-dlp...")
-    #     audio_file = self.download_audio_with_ytdlp(url)
-
-    #     print("[2] Loading Whisper model...")
-    #     model = whisper.load_model("base")  # <- this line must pass a model name, not self
-
-    #     print("[3] Transcribing...")
-    #     result = model.transcribe(audio_file)
-
-    #     print("[4] Transcription complete!\n")
-        # return result["text"]
-
-
     def read_pdf(self, file_path):
         """Extract text from a PDF using PyMuPDF."""
         text = ""
