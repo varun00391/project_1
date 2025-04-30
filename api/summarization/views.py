@@ -33,6 +33,15 @@ async def summarize_youtube(url: str = Form(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"YouTube summarization failed: {str(e)}")
 
+@router.post("/video-transcription")
+async def transcription(url: str = Form(...)):
+    """Endpoint to summarize YouTube videos."""
+    try:
+        transcription = summarizer.transcribe_youtube_video(url)
+        return JSONResponse(content={"transcription": transcription})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Transcription failed: {str(e)}")
+
 
 
 

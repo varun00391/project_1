@@ -24,7 +24,7 @@ app.add_middleware(
 )
 
 app.include_router(rag_router, prefix="/rag-chatbot", tags=["RAG Chatbot"])
-app.include_router(summarizer_router, prefix="/summarization", tags=["Summarization"])
+app.include_router(summarizer_router, prefix="/summarization and Transcription", tags=["Summarization"])
 
 
 if (__name__ == "__main__"):

@@ -15,3 +15,4 @@ openai-whisper
 PyMuPDF
 whisper
 yt-dlp
+huggingface_hub[hf_xet]
