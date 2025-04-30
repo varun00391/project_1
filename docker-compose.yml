@@ -12,3 +12,17 @@ services:
     env_file:
       - .env
     restart: unless-stopped
+
+  streamlit:
+    build:
+      context: ./streamlit_app         # Assuming your Streamlit code is in /streamlit_app
+      dockerfile: Dockerfile           # Dockerfile inside streamlit_app/
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./streamlit_app:/app
+    env_file:
+      - .env
+    depends_on:
+      - app
+    restart: unless-stopped

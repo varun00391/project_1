@@ -1,16 +1,14 @@
 # Streamlit Dockerfile
+
 FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
-RUN apt-get update && apt-get install -y ffmpeg
-RUN pip install yt-dlp openai-whisper
-
-COPY . .
 
 EXPOSE 8501
 
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.enableCORS=false"]
+
