@@ -1,29 +1,5 @@
 import streamlit as st
 import requests
-
-# st.set_page_config(page_title="PDF Summarizer", layout="centered")
-
-# st.title("Summarization Tool")
-# st.write("Upload a PDF file and get a smart summary generated using Groq's LLM.")
-
-# uploaded_file = st.sidebar.file_uploader("Upload your PDF", type=["pdf"])
-
-# if uploaded_file is not None:
-#     with st.spinner("Uploading and summarizing..."):
-#         files = {"file": (uploaded_file.name, uploaded_file, "application/pdf")}
-#         try:
-#             response = requests.post("http://summarization-api:8000/extract-pdf-text/", files=files)
-#             if response.status_code == 200:
-#                 result = response.json()
-#                 st.success(f"✅ Summary for: {result['filename']}")
-#                 st.text_area("Summary", result['summary'], height=300)
-#             else:
-#                 st.error(f"❌ Error: {response.json().get('error')}")
-#         except requests.exceptions.ConnectionError:
-#             st.error("⚠️ Could not connect to FastAPI server. Make sure it's running.")
-
-import streamlit as st
-import requests
 import os
 
 # Load backend URLs from environment variables or defaults
@@ -89,31 +65,6 @@ elif option == "📺 YouTube Transcription":
                             st.error(f"Error: {res.json().get('detail')}")
                     except requests.exceptions.ConnectionError:
                         st.error("⚠️ Could not connect to the API.")
-
-# ----------------- RAG Chatbot -----------------
-# elif option == "🤖 RAG Chatbot":
-#     st.subheader("💬 Chat with your PDF (RAG Chatbot)")
-
-#     query = st.text_input("Enter your question")
-#     if st.button("Ask"):
-#         if query:
-#             with st.spinner("Generating response..."):
-#                 try:
-#                     # res = requests.post(f"{RAG_API}/ask", json={"query": query})
-#                     res = requests.post(
-#                         f"{RAG_API}/ask",
-#                         data={"question": query, "url": url}
-#                     )
-
-#                     if res.status_code == 200:
-#                         answer = res.json()["answer"]
-#                         st.markdown(f"**🧠 Answer:**\n\n{answer}")
-#                     else:
-#                         st.error(f"Error: {res.json().get('detail')}")
-#                 except requests.exceptions.ConnectionError:
-#                     st.error("⚠️ Could not connect to the RAG API.")
-
-# ----------------- RAG Chatbot -----------------
 elif option == "🤖 RAG Chatbot":
     st.subheader("💬 Chat with a PDF or YouTube Video (RAG Chatbot)")
 
