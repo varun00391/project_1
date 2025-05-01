@@ -1,105 +1,306 @@
-import streamlit as st
-import requests
-import os
+# import streamlit as st
+# import pdfplumber
+# import base64
+# import io
 
-# Load backend URLs from environment variables or defaults
-SUMMARIZATION_API = os.getenv("SUMMARIZATION_API_URL", "http://localhost:8000/summarization")
-RAG_API = os.getenv("RAG_API_URL", "http://localhost:8000/rag-chatbot")
+# # Function to extract text from PDF
+# def extract_text_from_pdf(file):
+#     text = ""
+#     with pdfplumber.open(file) as pdf:
+#         for page in pdf.pages:
+#             page_text = page.extract_text()
+#             if page_text:
+#                 text += page_text + "\n"
+#     return text.strip()
 
-st.set_page_config(page_title="Multimodal AI Assistant", layout="wide")
-st.title("📚 Multimodal AI Assistant")
+# # Simple summarizer (first few lines)
+# def summarize_text(text, max_lines=5):
+#     lines = text.split('\n')
+#     summary = "\n".join(lines[:max_lines])
+#     return summary.strip()
 
-# Sidebar Navigation
-option = st.sidebar.radio("Choose a Feature", ["📄 PDF Summarization", "📺 YouTube Transcription", "🤖 RAG Chatbot"])
+# # Simple chatbot logic
+# def chat_with_pdf(query, text):
+#     if query.lower() in text.lower():
+#         return f"Found: \"{query}\" in PDF.\n\n{text[:500]}..."
+#     else:
+#         return "Sorry, no relevant info found in the PDF."
 
-# ----------------- PDF Summarization -----------------
-if option == "📄 PDF Summarization":
-    st.subheader("📄 Upload a PDF to Summarize")
-    uploaded_file = st.file_uploader("Upload your PDF file", type=["pdf"])
+# # Embed PDF using iframe
+# def embed_pdf(file_bytes):
+#     base64_pdf = base64.b64encode(file_bytes).decode('utf-8')
+#     pdf_display = (
+#         f'<iframe src="data:application/pdf;base64,{base64_pdf}" '
+#         f'width="100%" height="800" allowfullscreen></iframe>'
+#     )
+#     return pdf_display
+
+# def main():
+#     st.set_page_config(layout="wide")
+#     st.title("📘 PDF Viewer, Summarizer & Chatbot")
+
+#     st.sidebar.header("📂 Upload PDF")
+#     uploaded_file = st.sidebar.file_uploader("Choose a PDF", type="pdf")
+
+#     if uploaded_file:
+#         file_bytes = uploaded_file.getvalue()
+#         full_text = extract_text_from_pdf(io.BytesIO(file_bytes))
+
+#         if 'chat_history' not in st.session_state:
+#             st.session_state.chat_history = []
+
+#         mode = st.sidebar.radio("Choose Mode", ["Summarize PDF", "Chat with PDF"])
+
+#         left_col, right_col = st.columns([1.2, 1.8])
+
+#         with right_col:
+#             st.subheader("📄 PDF Viewer")
+#             st.markdown(embed_pdf(file_bytes), unsafe_allow_html=True)
+
+#         with left_col:
+#             if mode == "Summarize PDF":
+#                 st.subheader("📝 PDF Summary")
+#                 summary = summarize_text(full_text)
+#                 st.success(summary)
+
+#             elif mode == "Chat with PDF":
+#                 st.subheader("💬 Chat with PDF")
+
+#                 # Display chat history
+#                 for msg in st.session_state.chat_history:
+#                     with st.chat_message("user"):
+#                         st.markdown(msg["user"])
+#                     with st.chat_message("assistant"):
+#                         st.markdown(msg["bot"])
+
+#                 # Chat input at bottom of left column
+#                 user_input = st.chat_input("Ask a question about the PDF")
+#                 if user_input:
+#                     response = chat_with_pdf(user_input, full_text)
+#                     st.session_state.chat_history.append({"user": user_input, "bot": response})
+#                     st.rerun()  # Re-render chat immediately
+
+#     else:
+#         st.info("Upload a PDF from the sidebar to begin.")
+
+# if __name__ == "__main__":
+#     main()
+
+########################### Above is Version-1 #####################################################################
+
+
+############################ Below is version - 2###################################################################
+
+
+# import streamlit as st
+# import pdfplumber
+# import base64
+# import io
+
+# # Function to extract text from PDF
+# def extract_text_from_pdf(file):
+#     text = ""
+#     with pdfplumber.open(file) as pdf:
+#         for page in pdf.pages:
+#             page_text = page.extract_text()
+#             if page_text:
+#                 text += page_text + "\n"
+#     return text.strip()
+
+# # Simple summarizer (first few lines)
+# def summarize_text(text, max_lines=5):
+#     lines = text.split('\n')
+#     summary = "\n".join(lines[:max_lines])
+#     return summary.strip()
+
+# # Simple chatbot logic
+# def chat_with_pdf(query, text):
+#     if query.lower() in text.lower():
+#         return f"Found: \"{query}\" in PDF.\n\n{text[:500]}..."
+#     else:
+#         return "Sorry, no relevant info found in the PDF."
+
+# def main():
+#     st.set_page_config(layout="wide")
+#     st.title("📘 PDF Summarizer & Chatbot")
+
+#     st.markdown(
+#     """
+#     <style>
+#     /* Fix the chat input to the bottom of the main content area */
+#     [data-testid="stChatInput"] {
+#         position: fixed;
+#         bottom: 0;
+#         left: 350px; /* Adjust this value to match your sidebar width */
+#         width: calc(100% - 350px); /* Ensures the input stays within screen bounds */
+#         background-color: white;
+#         z-index: 100;
+#         padding: 10px;
+#         border-top: 1px solid #e6e6e6;
+#     }
     
-    if uploaded_file:
-        with st.spinner("Summarizing PDF..."):
-            files = {"file": (uploaded_file.name, uploaded_file, "application/pdf")}
-            try:
-                response = requests.post(f"{SUMMARIZATION_API}/summarize-pdf", files=files)
-                if response.status_code == 200:
-                    result = response.json()
-                    st.success("✅ Summary Generated")
-                    st.text_area("Summary", result["summary"], height=300)
-                else:
-                    st.error(f"❌ Error: {response.json().get('detail')}")
-            except requests.exceptions.ConnectionError:
-                st.error("⚠️ Could not connect to the Summarization API.")
+#     /* Add extra bottom padding on the main vertical block so that chat history isn't hidden */
+#     [data-testid="stVerticalBlock"] {
+#         padding-bottom: 70px;
+#     }
+#     </style>
+#     """,unsafe_allow_html=True)
 
-# ----------------- YouTube Transcription -----------------
-elif option == "📺 YouTube Transcription":
-    st.subheader("🎙️ Transcribe or Summarize a YouTube Video")
-    youtube_url = st.text_input("Enter YouTube Video URL")
 
-    col1, col2 = st.columns(2)
+#     # Sidebar for PDF upload
+#     st.sidebar.header("📂 Upload PDF")
+#     uploaded_file = st.sidebar.file_uploader("Choose a PDF", type="pdf")
 
-    with col1:
-        if st.button("Transcribe"):
-            if youtube_url:
-                with st.spinner("Transcribing video..."):
-                    try:
-                        res = requests.post(f"{SUMMARIZATION_API}/video-transcription", data={"url": youtube_url})
-                        if res.status_code == 200:
-                            transcription = res.json()["transcription"]
-                            st.text_area("📄 Transcription", transcription, height=300)
-                        else:
-                            st.error(f"Error: {res.json().get('detail')}")
-                    except requests.exceptions.ConnectionError:
-                        st.error("⚠️ Could not connect to the API.")
+#     if uploaded_file:
+#         file_bytes = uploaded_file.getvalue()
+#         full_text = extract_text_from_pdf(io.BytesIO(file_bytes))
 
-    with col2:
-        if st.button("Summarize"):
-            if youtube_url:
-                with st.spinner("Summarizing video..."):
-                    try:
-                        res = requests.post(f"{SUMMARIZATION_API}/summarize-youtube", data={"url": youtube_url})
-                        if res.status_code == 200:
-                            summary = res.json()["summary"]
-                            st.text_area("📄 Summary", summary, height=300)
-                        else:
-                            st.error(f"Error: {res.json().get('detail')}")
-                    except requests.exceptions.ConnectionError:
-                        st.error("⚠️ Could not connect to the API.")
-elif option == "🤖 RAG Chatbot":
-    st.subheader("💬 Chat with a PDF or YouTube Video (RAG Chatbot)")
+#         if 'chat_history' not in st.session_state:
+#             st.session_state.chat_history = []
 
-    source_type = st.radio("Choose your source", ["PDF File", "YouTube Video"], horizontal=True)
-    query = st.text_input("Enter your question")
+#         mode = st.sidebar.radio("Choose Mode", ["Summarize PDF", "Chat with PDF"])
 
-    if source_type == "PDF File":
-        uploaded_file = st.file_uploader("Upload a PDF", type=["pdf"])
+#         left_col = st.columns([1.0])[0]  # Only one column for the content (left column)
+
+#         with left_col:
+#             if mode == "Summarize PDF":
+#                 st.subheader("📝 PDF Summary")
+#                 summary = summarize_text(full_text)
+#                 st.success(summary)
+
+#             elif mode == "Chat with PDF":
+#                 st.subheader("💬 Chat with PDF")
+
+#                 # Display chat history
+#                 for msg in st.session_state.chat_history:
+#                     with st.chat_message("user"):
+#                         st.markdown(msg["user"])
+#                     with st.chat_message("assistant"):
+#                         st.markdown(msg["bot"])
+
+#                 # Chat input at the bottom (this is now fixed using CSS)
+#                 user_input = st.chat_input("Ask a question about the PDF")
+#                 if user_input:
+#                     response = chat_with_pdf(user_input, full_text)
+#                     st.session_state.chat_history.append({"user": user_input, "bot": response})
+#                     st.rerun()  # Re-render chat immediately
+
+#     else:
+#         st.info("Upload a PDF from the sidebar to begin.")
+
+# if __name__ == "__main__":
+#     main()
+
+import streamlit as st
+import pdfplumber
+import base64
+import io
+
+# Function to extract text from PDF
+def extract_text_from_pdf(file):
+    text = ""
+    with pdfplumber.open(file) as pdf:
+        for page in pdf.pages:
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text + "\n"
+    return text.strip()
+
+# Simple summarizer (first few lines)
+def summarize_text(text, max_lines=5):
+    lines = text.split('\n')
+    summary = "\n".join(lines[:max_lines])
+    return summary.strip()
+
+# Simple chatbot logic
+def chat_with_pdf(query, text):
+    if query.lower() in text.lower():
+        return f"Found: \"{query}\" in PDF.\n\n{text[:500]}..."
     else:
-        youtube_url = st.text_input("Enter YouTube Video URL")
+        return "Sorry, no relevant info found in the PDF."
 
-    if st.button("Ask"):
-        if not query:
-            st.warning("Please enter a question.")
+def main():
+    st.set_page_config(layout="wide")
+    st.title("📘 PDF Summarizer & Chatbot")
+
+    # Inject custom CSS to make chat input fixed at the bottom of the page
+    st.markdown(
+        """
+        <style>
+        /* Fix the chat input to the bottom of the main content area */
+        [data-testid="stChatInput"] {
+            position: fixed;
+            bottom: 0;
+            left: 350px; /* Adjust this value to match your sidebar width */
+            width: calc(100% - 350px); /* Ensures the input stays within screen bounds */
+            background-color: white;
+            z-index: 100;
+            padding: 10px;
+            border-top: 1px solid #e6e6e6;
+        }
+    
+        /* Add extra bottom padding on the main vertical block so that chat history isn't hidden */
+        [data-testid="stVerticalBlock"] {
+            padding-bottom: 70px;
+        }
+        </style>
+        """, unsafe_allow_html=True
+    )
+
+    # Sidebar for file upload and mode selection
+    st.sidebar.header("📂 Upload PDF")
+    uploaded_file = st.sidebar.file_uploader("Choose a PDF", type="pdf")
+    
+    # Move the mode selection outside of the file-upload condition.
+    mode = st.sidebar.radio("Choose Mode", ["Summarize PDF", "Chat with PDF"])
+
+    # Prepare main panel content
+    left_col = st.columns([1.0])[0]  # Only one column for the content (left column)
+    with left_col:
+        if uploaded_file:
+            file_bytes = uploaded_file.getvalue()
+            full_text = extract_text_from_pdf(io.BytesIO(file_bytes))
+            
+            # Initialize chat history if not already in session state
+            if 'chat_history' not in st.session_state:
+                st.session_state.chat_history = []
+            
+            if mode == "Summarize PDF":
+                st.subheader("📝 PDF Summary")
+                summary = summarize_text(full_text)
+                st.success(summary)
+
+            elif mode == "Chat with PDF":
+                st.subheader("💬 Chat with PDF")
+                
+                # Display chat history
+                for msg in st.session_state.chat_history:
+                    with st.chat_message("user"):
+                        st.markdown(msg["user"])
+                    with st.chat_message("assistant"):
+                        st.markdown(msg["bot"])
+                
+                # Chat input at the bottom (this is now fixed using CSS)
+                user_input = st.chat_input("Ask a question about the PDF")
+                if user_input:
+                    response = chat_with_pdf(user_input, full_text)
+                    st.session_state.chat_history.append({"user": user_input, "bot": response})
+                    st.rerun()  # Re-render chat immediately
         else:
-            with st.spinner("Generating response..."):
-                try:
-                    if source_type == "PDF File" and uploaded_file:
-                        files = {"file": (uploaded_file.name, uploaded_file, "application/pdf")}
-                        data = {"question": query}
-                        res = requests.post(f"{RAG_API}/ask", data=data, files=files)
+            # When no file is uploaded, you'll still see the mode selector at the sidebar.
+            # In the main area, display contextual hints based on the selected mode.
+            if mode == "Summarize PDF":
+                st.info("Upload a PDF from the sidebar to generate a summary.")
+            elif mode == "Chat with PDF":
+                st.info("Upload a PDF from the sidebar to initiate chat.")
 
-                    elif source_type == "YouTube Video" and youtube_url:
-                        data = {"question": query, "url": youtube_url}
-                        res = requests.post(f"{RAG_API}/ask", data=data)
+if __name__ == "__main__":
+    main()
 
-                    else:
-                        st.error("Please upload a PDF or enter a YouTube URL.")
-                        res = None
 
-                    if res and res.status_code == 200:
-                        answer = res.json()["response"]
-                        st.markdown(f"**🧠 Answer:**\n\n{answer}")
-                    elif res:
-                        st.error(f"Error: {res.json().get('detail', res.text)}")
 
-                except requests.exceptions.ConnectionError:
-                    st.error("⚠️ Could not connect to the RAG API.")
+
+
+
+
+
