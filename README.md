@@ -8,4 +8,5 @@ Also added JenkinsFile for CICD.
 
 In version-2, api are already created for pdf and youtube video summarization and rag based chatbot.
 Currently created Streamlit App with capability of summarizing pdf files. 
-Working on adding summarization for youtube videos also.
+Added chatbot functionlity for pdf files.
+Working on adding summarization and chatbot functionality for youtube videos also.
