@@ -22,8 +22,6 @@ async def ask_question(
             file = None
         else:
             return JSONResponse(content={"error": "Invalid file provided."}, status_code=400)
-
-
     try:
         # if file and file.filename:
         if file:  # is not None and file.filename:
@@ -62,46 +60,3 @@ async def ask_question(
 
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
-
-
-# @router.post("/ask")
-# async def ask_question(
-#     request: Request,
-#     question: str = Form(...),
-#     file: Optional[UploadFile] = File(None),
-#     url: Optional[str] = Form(None),
-# ):
-#     """Ask a question from either a PDF file or a YouTube video."""
-#     try:
-#         if file and file.filename:
-#             # Process PDF file
-#             with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-#                 tmp.write(await file.read())
-#                 tmp_path = tmp.name
-
-#             try:
-#                 docs = pipeline.load_pdf(tmp_path)
-#             finally:
-#                 os.remove(tmp_path)
-
-#         elif url:
-#             # Process YouTube URL
-#             transcription = pipeline.transcribe_youtube_video(url)
-#             print("Transcription:", transcription[:200])  # Optional: log to debug
-#             docs = [Document(page_content=transcription, metadata={"source": url})]
-#             # transcription = [{"page_content": pipeline.transcribe_youtube_video(url)}]
-#             # docs = [Document(page_content=transcription, metadata={"source": url})]
-#         else:
-#             return JSONResponse(content={"error": "Please upload a PDF file or provide a YouTube URL."}, status_code=400)
-
-#         # Common RAG logic
-#         chunks = pipeline.split_documents(docs)
-#         vectorstore = pipeline.create_vectorstore(chunks)
-#         llm = pipeline.get_llm()
-#         response = pipeline.ask_question(vectorstore, question, llm)
-
-#         return JSONResponse(content={"response": response['result']})
-
-#     except Exception as e:
-#         return JSONResponse(content={"error": str(e)}, status_code=500)
-
