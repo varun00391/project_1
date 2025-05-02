@@ -1,5 +1,3 @@
-# streamlit_app/streamlit_summarizer.py
-
 import tempfile
 import sys
 import os
