@@ -18,9 +18,10 @@ services:
       context: ./streamlit_app         # Assuming your Streamlit code is in /streamlit_app
       dockerfile: Dockerfile           # Dockerfile inside streamlit_app/
     ports:
-      - "8501:8501"
+      - "8502:8501"
     volumes:
       - ./streamlit_app:/app
+      - ./api:/app/api  # Mount the 'api' folder inside the container
     env_file:
       - .env
     depends_on:
