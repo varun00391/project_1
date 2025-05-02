@@ -77,41 +77,6 @@ class RAGPipeline:
             # Always clean up the temp folder
             tmp_dir.cleanup()
             print(f"[6] Temp folder {tmp_dir.name} deleted.")
-            
-    # def download_audio_with_ytdlp_temp(self, url):
-    #     tmp_dir = tempfile.TemporaryDirectory()
-    #     output_template = os.path.join(tmp_dir.name, "%(title)s.%(ext)s")
-
-    #     command = [
-    #         "yt-dlp",
-    #         "-f", "bestaudio",
-    #         "--extract-audio",
-    #         "--audio-format", "mp3",
-    #         "--output", output_template,
-    #         url
-    #     ]
-
-    #     subprocess.run(command, check=True)
-
-    #     mp3_files = glob.glob(os.path.join(tmp_dir.name, "*.mp3"))
-    #     if not mp3_files:
-    #         raise Exception("No MP3 file found after download.")
-        
-    #     return mp3_files[0], tmp_dir
-
-    # def transcribe_youtube_video(self, url):
-    #     print("[1] Downloading audio...")
-    #     audio_file_path, tmp_dir = self.download_audio_with_ytdlp_temp(url)
-
-    #     try:
-    #         print(f"[2] Audio file downloaded: {audio_file_path}")
-    #         print("[3] Transcribing...")
-    #         result = self.whisper_model.transcribe(audio_file_path)
-    #         print("[4] Transcription complete!")
-    #         return result["text"]
-    #     finally:
-    #         tmp_dir.cleanup()
-    #         print(f"[5] Temp folder {tmp_dir.name} deleted.")
     
     def load_pdf(self, file_path):
         loader = PyPDFLoader(file_path)
