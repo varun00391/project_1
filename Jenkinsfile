@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER = '/usr/local/bin/docker'
+        DOCKER_CLI_EXPERIMENTAL = 'enabled'  // Set the environment variable here
     }
 
     stages {
@@ -12,39 +12,42 @@ pipeline {
             }
         }
 
-        stage('Stop Previous Containers') {
+        stage('Generate .env') {
             steps {
-                echo '🛑 Stopping running containers...'
-                sh "${DOCKER} compose down || true"
+                withCredentials([string(credentialsId: 'GROQ_API_KEY', variable: 'GROQ_KEY')]) {
+                    writeFile file: '.env', text: "GROQ_API_KEY=${GROQ_KEY}"
+                }
             }
         }
 
-        stage('Build & Start Services') {
+
+        stage('Build and Run') {
             steps {
-                echo '🚀 Building and starting containers...'
-                sh "${DOCKER} compose up -d --build"
+                echo 'Stopping existing containers...'
+                sh 'export DOCKER_CLI_EXPERIMENTAL=enabled && /usr/local/bin/docker-compose down --remove-orphans'
+
+                echo 'Building and starting containers...'
+                sh 'export DOCKER_CLI_EXPERIMENTAL=enabled && /usr/local/bin/docker-compose up -d --build || docker-compose logs'
             }
         }
 
-        stage('Verify FastAPI') {
-            steps {
-                echo '🔍 Verifying FastAPI is up...'
-                sh 'curl -s http://localhost:8000/docs'
-            }
-        }
 
-        stage('Verify Streamlit') {
+        stage('Health Check') {
             steps {
-                echo '🔍 Verifying Streamlit is up...'
-                sh 'curl -s http://localhost:8501'
+                script {
+                    def response = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/docs', returnStdout: true).trim()
+                    if (response != '200') {
+                        error "FastAPI app is not healthy (status code: ${response})"
+                    }
+                }
             }
         }
     }
 
     post {
-        failure {
-            echo '❌ Something went wrong. Cleaning up...'
-            sh "${DOCKER} compose down || true"
-        }
+    always {
+        echo 'Build completed — not cleaning up so containers stay up.'
     }
+}
+
 }

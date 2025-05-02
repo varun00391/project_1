@@ -1,26 +1,29 @@
-version: '3.8'
+version: "3.9"
 
 services:
-  summarization-api:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: summarization-api
     ports:
       - "8000:8000"
     volumes:
-      - .:/app  # Optional: mount code for live changes during development
-    restart: unless-stopped
+      - .:/app
     env_file:
       - .env
+    restart: unless-stopped
 
-  streamlit-app:
+  streamlit:
     build:
-      context: ./streamlit_app
-      dockerfile: Dockerfile
-    container_name: streamlit-frontend
+      context: ./streamlit_app         # Assuming your Streamlit code is in /streamlit_app
+      dockerfile: Dockerfile           # Dockerfile inside streamlit_app/
     ports:
-      - "8501:8501"
+      - "8502:8501"
+    volumes:
+      - ./streamlit_app:/app
+      - ./api:/app/api  # Mount the 'api' folder inside the container
+    env_file:
+      - .env
     depends_on:
-      - summarization-api
+      - app
     restart: unless-stopped

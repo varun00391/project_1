@@ -1,23 +1,16 @@
-# Use official Python image
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy only requirements first for caching
-COPY requirements.txt .
+# Install OS-level dependencies (e.g., ffmpeg for Whisper, yt-dlp)
+RUN apt-get update && apt-get install -y ffmpeg git && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy all files into the container
+COPY . .
 
-# Copy the entire service folder into /app
-# COPY app/service/ .
-COPY api/service/ ./api/service/
+# Install Python dependencies
+RUN pip install --no-cache-dir -r api/requirements.txt
 
-# Expose FastAPI default port
-EXPOSE 8000
-
-# Start FastAPI app
-# CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-CMD ["uvicorn", "api.service.views:app", "--host", "0.0.0.0", "--port", "8000"]
-
+# Default command
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
