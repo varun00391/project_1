@@ -9,7 +9,7 @@ from api.summarization.utils import SummarizationPipeline
 
 summarizer = SummarizationPipeline()
 
-def summarize_pdf_file(uploaded_file):
+def summarize_pdf_file(uploaded_file,return_summary=True):
     """Takes a Streamlit uploaded PDF and returns its summary."""
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
         tmp.write(uploaded_file.read())
